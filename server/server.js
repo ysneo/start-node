@@ -53,7 +53,6 @@ http.createServer((req, rsp) => {
 }).listen(8002)
 
 // to build a server with html
-
 // 1. single file .html
 http.createServer((request, response) => {
   const fileName = './index.html'
@@ -64,3 +63,24 @@ http.createServer((request, response) => {
     response.end()
   })
 }).listen(8003)
+
+// 2. more complex, need to load extra file, like script src
+http.createServer((request, response) => {
+  const fileHtml = './index_js.html'
+  const fileJs = './src/app.js'
+  if (request.url === '/') {
+    fs.readFile(fileHtml, 'utf-8', (er, html) => {
+      if (er) throw er
+      response.writeHead(200, { 'Content-Type': MimeTypes.html })
+      response.write(html)
+      response.end()
+    })
+  } else {
+    fs.readFile(fileJs, 'utf-8', (er, js) => {
+      if (er) throw er
+      response.writeHead(200, { 'Content-Type': MimeTypes.js })
+      response.write(js)
+      response.end()
+    })
+  }
+}).listen(8004)
