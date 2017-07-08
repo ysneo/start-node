@@ -2,9 +2,17 @@ const http = require('http')
 const url = require('url');
 const fs = require('fs')
 
+
+const MimeTypes = {
+  plain: 'text/plain',
+  html: 'text/html',
+  js: 'text/javascript'
+}
+
+
 // build a simple http server
 http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-type': 'text/plain' })
+  response.writeHead(200, { 'Content-type': MimeTypes.plain })
   response.write('You did it!')
   response.end()
 }).listen(8000)
@@ -27,7 +35,7 @@ http.createServer((req, rsp) => {
     const fileName = './src/count.txt'
     fs.readFile(fileName, 'utf-8', (er, data) => {
       if (er) throw er
-      rsp.writeHead(200, { 'Content-Type': 'text/plain' })
+      rsp.writeHead(200, { 'Content-Type': MimeTypes.plain })
       rsp.write(`previous number is ${data}\n`)
       const plus = parseInt(data) + 1
       fs.writeFile(fileName, plus, () => {
@@ -43,3 +51,16 @@ http.createServer((req, rsp) => {
     rsp.end()
   }
 }).listen(8002)
+
+// to build a server with html
+
+// 1. single file .html
+http.createServer((request, response) => {
+  const fileName = './index.html'
+  fs.readFile(fileName, 'utf-8', (er, html) => {
+    if (er) throw er
+    response.writeHead(200, { 'Content-Type': MimeTypes.html })
+    response.write(html)
+    response.end()
+  })
+}).listen(8003)
