@@ -1,11 +1,11 @@
 {
-  "name": "start-node",
-  "version": "1.0",
-  "main": "index.js",
-  "repository": "https://github.com/ysneo/start-node.git",
-  "author": "ysneo <jinchn728@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "start": "node ./server/server.js"
-  }
+    "name": "start-node",
+    "version": "1.0",
+    "main": "index.js",
+    "repository": "https://github.com/ysneo/start-node.git",
+    "author": "ysneo <jinchn728@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "start": "node ./server/server.js"
+    }
 }
