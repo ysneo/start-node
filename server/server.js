@@ -3,16 +3,20 @@ const url = require('url');
 const fs = require('fs')
 
 
-const MimeTypes = {
-  plain: 'text/plain',
-  html: 'text/html',
-  js: 'text/javascript'
+const fileExtensions = {
+  'html': 'text/html',
+  'css': 'text/css',
+  'js': 'text/javascript',
+  'json': 'application/json',
+  'png': 'image/png',
+  'jpg': 'image/jpg',
+  'wav': 'audio/wav',
 }
 
 
 // build a simple http server
 http.createServer((request, response) => {
-  response.writeHead(200, { 'Content-type': MimeTypes.plain })
+  response.writeHead(200, { 'Content-type': fileExtensions.plain })
   response.write('You did it!')
   response.end()
 }).listen(8000)
@@ -35,7 +39,7 @@ http.createServer((req, rsp) => {
     const fileName = './src/count.txt'
     fs.readFile(fileName, 'utf-8', (er, data) => {
       if (er) throw er
-      rsp.writeHead(200, { 'Content-Type': MimeTypes.plain })
+      rsp.writeHead(200, { 'Content-Type': fileExtensions.plain })
       rsp.write(`previous number is ${data}\n`)
       const plus = parseInt(data) + 1
       fs.writeFile(fileName, plus, () => {
@@ -58,7 +62,7 @@ http.createServer((request, response) => {
   const fileName = './index.html'
   fs.readFile(fileName, 'utf-8', (er, html) => {
     if (er) throw er
-    response.writeHead(200, { 'Content-Type': MimeTypes.html })
+    response.writeHead(200, { 'Content-Type': fileExtensions.html })
     response.write(html)
     response.end()
   })
@@ -66,21 +70,42 @@ http.createServer((request, response) => {
 
 // 2. more complex, need to load extra file, like script src
 http.createServer((request, response) => {
-  const fileHtml = './index_js.html'
-  const fileJs = './src/app.js'
+  // const fileHtml = './index_js.html'
+  // const fileJs = './src/app.js'
+
+  // if (request.url === '/') {
+  //   fs.readFile(fileHtml, 'utf-8', (er, html) => {
+  //     if (er) throw er
+  //     response.writeHead(200, { 'Content-Type': MimeTypes.html })
+  //     response.write(html)
+  //     response.end()
+  //   })
+  // } else {
+  //   fs.readFile(fileJs, 'utf-8', (er, js) => {
+  //     if (er) throw er
+  //     response.writeHead(200, { 'Content-Type': MimeTypes.js })
+  //     response.write(js)
+  //     response.end()
+  //   })
+  // }
+
+  // new
+  let path, fileSuffix, mimeType
+
   if (request.url === '/') {
-    fs.readFile(fileHtml, 'utf-8', (er, html) => {
-      if (er) throw er
-      response.writeHead(200, { 'Content-Type': MimeTypes.html })
-      response.write(html)
-      response.end()
-    })
+    path = './index_js.html'
+    fileSuffix = 'html'
   } else {
-    fs.readFile(fileJs, 'utf-8', (er, js) => {
-      if (er) throw er
-      response.writeHead(200, { 'Content-Type': MimeTypes.js })
-      response.write(js)
-      response.end()
-    })
+    path = '.' + request.url
+    fileSuffix = path.split('.').pop()
   }
+  mimeType = fileExtensions[fileSuffix]
+
+  fs.readFile(path, 'utf-8', (er, data) => {
+    if (er) throw er
+    response.writeHead(200, { 'Content-Type': mimeType })
+    response.write(data)
+    response.end()
+  })
+
 }).listen(8004)
