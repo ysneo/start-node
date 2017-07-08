@@ -11,6 +11,7 @@ const fileExtensions = {
   'png': 'image/png',
   'jpg': 'image/jpg',
   'wav': 'audio/wav',
+  'ico': 'image/x-icon'
 }
 
 
@@ -93,7 +94,7 @@ http.createServer((request, response) => {
   let path, fileSuffix, mimeType
 
   if (request.url === '/') {
-    path = './index_js.html'
+    path = './index_main.html'
     fileSuffix = 'html'
   } else {
     path = '.' + request.url
