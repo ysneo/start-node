@@ -92,6 +92,8 @@ http.createServer((request, response) => {
 
   // new
   let path, fileSuffix, mimeType
+  const isFavicon = /.ico$/i.test(request.url) // do not need to load favicon.ico
+  if (isFavicon) return
 
   if (request.url === '/') {
     path = './index_main.html'
